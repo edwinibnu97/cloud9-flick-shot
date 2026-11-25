@@ -6,7 +6,7 @@ Click the glowing targets as fast and accurately as you can. Chain hits to build
 
 ## Play
 
-- **Live demo:** _(deployment link added once live)_
+- **Live demo:** https://edwinibnu97.github.io/cloud9-flick-shot/
 - **How to play:** Click / tap the glowing targets. Hits score points (bigger combo = more points). Clicking empty arena counts as a miss and resets the combo.
 - **Session:** 60 seconds, mouse-only (touch works too), no tutorial, instant reset between players — built for repeated booth play.
 - **Leaderboard:** Top 10 scores are saved in the browser's `localStorage` — fully offline, no Wi-Fi needed, no account, no server.
