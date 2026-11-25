@@ -37,7 +37,7 @@ Or just open `index.html` directly in a browser (sound needs a user gesture firs
 
 Scaffold stage (November 2026). The core loop is playable end to end: menu → countdown → 60-second round → score screen → local leaderboard → instant Play Again.
 
-Planned next steps: polish (particles/sound tuning, idle attract screen), a second "Reaction" mode, the methodology write-up, the AI workflow story, and a ≤3-minute demo video.
+Done since the scaffold: idle attract mode (auto-playing demo behind the menu + blinking "CLICK TO PLAY" hint; the score screen returns to the menu after 20 s idle) and the methodology write-up ([METHODOLOGY.md](METHODOLOGY.md)). Still planned: a second "Reaction" mode, the AI workflow story, and a ≤3-minute demo video.
 
 **Note on tooling:** the JetBrains trial codes for this hackathon had not arrived yet when this scaffold was built, so no JetBrains IDE was used for this code and no `.idea` / `.junie` / `.air` folders are committed. The project will be rebuilt in a JetBrains IDE (WebStorm) once the trial codes arrive, and the tooling evidence will be committed then.
 

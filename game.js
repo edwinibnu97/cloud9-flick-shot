@@ -39,6 +39,8 @@
   var timeLeft = GAME_DURATION;
   var lastTs = 0, elapsed = 0, spawnAcc = 0;
   var rafId = 0;
+  var attractAcc = 0, attractShots = 0;
+  var scoreIdleTimer = 0;
   var soundOn = true;
   var audioCtx = null;
   var savedThisRound = false;
@@ -160,6 +162,53 @@
       particles.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 0.45 + Math.random() * 0.25, t: 0, color: color, r: 2 + Math.random() * 3 });
     }
   }
+
+  // ---------- attract mode (idle demo on the menu) ----------
+  // While nobody is playing, targets keep spawning and "shoot" themselves
+  // with a burst + floating score, so the booth screen looks alive and
+  // shows passers-by how the game works — no sound, no score changes.
+  // It stops the moment a round starts (resetRound clears everything).
+  function attractTick(dt) {
+    attractAcc += dt * 1000;
+    if (attractAcc >= 750 && targets.length < 2) {
+      attractAcc = 0;
+      spawnTarget();
+      var t = targets[targets.length - 1];
+      t.attract = true;
+      t.shootAt = performance.now() + 500 + Math.random() * 400;
+      t.life = 1400;
+    }
+    var now = performance.now();
+    for (var i = targets.length - 1; i >= 0; i--) {
+      var at = targets[i];
+      if (!at.attract) { targets.splice(i, 1); continue; }
+      if (now >= at.shootAt) {
+        burst(at.x, at.y, '#6ea8ff');
+        floaters.push({ x: at.x, y: at.y - at.r, text: '+100', t: 0, life: 0.8 });
+        attractShots++;
+        targets.splice(i, 1);
+      } else if (now - at.born > at.life) {
+        targets.splice(i, 1);
+      }
+    }
+  }
+
+  // ---------- score-screen idle: back to attract mode ----------
+  function clearScoreIdle() {
+    if (scoreIdleTimer) { clearTimeout(scoreIdleTimer); scoreIdleTimer = 0; }
+  }
+  function armScoreIdle() {
+    clearScoreIdle();
+    scoreIdleTimer = setTimeout(goMenu, 20000);
+  }
+  function goMenu() {
+    clearScoreIdle();
+    state = 'menu';
+    targets = []; particles = []; floaters = [];
+    attractAcc = 0;
+    renderBoards();
+    showOnly(menuEl);
+  }
   function ringMiss(x, y) {
     particles.push({ x: x, y: y, vx: 0, vy: 0, life: 0.3, t: 0, color: '#ff5d73', r: 14, ring: true });
   }
@@ -175,6 +224,7 @@
     targets = []; particles = []; floaters = [];
     score = 0; hits = 0; misses = 0; combo = 0; bestStreak = 0;
     timeLeft = GAME_DURATION; elapsed = 0; spawnAcc = 0;
+    attractAcc = 0;
     savedThisRound = false;
     saveBtn.disabled = false;
     saveMsg.classList.add('hidden');
@@ -182,6 +232,7 @@
   }
 
   function startCountdown() {
+    clearScoreIdle();
     resetRound();
     state = 'countdown';
     showOnly(countdownEl);
@@ -221,6 +272,7 @@
     document.getElementById('statStreak').textContent = bestStreak;
     renderBoards();
     showOnly(scoreEl);
+    armScoreIdle(); // idle 20s on the score screen -> back to attract mode
   }
 
   function updateHud() {
@@ -274,11 +326,7 @@
 
   startBtn.addEventListener('click', startCountdown);
   againBtn.addEventListener('click', startCountdown);
-  menuBtn.addEventListener('click', function () {
-    state = 'menu';
-    renderBoards();
-    showOnly(menuEl);
-  });
+  menuBtn.addEventListener('click', goMenu);
   saveBtn.addEventListener('click', function () {
     if (savedThisRound || state !== 'score') return;
     var name = (nameInput.value || 'ACE').trim().toUpperCase().slice(0, 10) || 'ACE';
@@ -293,6 +341,7 @@
     saveBtn.disabled = true;
     saveMsg.classList.remove('hidden');
     renderBoards();
+    armScoreIdle(); // saving counts as activity: restart the 20s idle clock
   });
 
   // ---------- render loop ----------
@@ -361,6 +410,10 @@
       if (timeLeft <= 0) { endRound(); }
     }
 
+    if (state === 'menu') {
+      attractTick(dt); // idle demo behind the menu overlay
+    }
+
     for (var j = 0; j < targets.length; j++) drawTarget(targets[j], performance.now());
 
     // particles
@@ -399,6 +452,12 @@
   }
 
   // ---------- init ----------
+  // Read-only debug handle for automated smoke tests.
+  window.__c9fs = {
+    state: function () { return state; },
+    targets: function () { return targets.length; },
+    attractShots: function () { return attractShots; },
+  };
   resize();
   renderBoards();
   showOnly(menuEl);

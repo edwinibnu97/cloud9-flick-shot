@@ -81,6 +81,18 @@ body {
 
 .hidden { display: none !important; }
 
+/* Menu doubles as the attract screen: keep the overlay translucent
+   so the auto-playing demo behind it stays visible. */
+#menu {
+  background: radial-gradient(700px 420px at 50% 40%, rgba(18, 42, 99, 0.55), rgba(4, 8, 26, 0.82));
+}
+.attract-hint {
+  font-size: 15px; font-weight: 900; letter-spacing: 4px; color: var(--gold);
+  text-shadow: 0 0 18px rgba(255, 215, 94, 0.6);
+  animation: c9blink 1.2s ease-in-out infinite;
+}
+@keyframes c9blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
 #menu h1 {
   font-size: clamp(38px, 7vw, 72px); line-height: 0.95; font-weight: 900; letter-spacing: 3px;
   text-shadow: 0 0 34px rgba(47, 123, 255, 0.8);
