@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cloud9 Flick Shot — 60-Second Aim Trainer</title>
+<meta name="description" content="Cloud9 Flick Shot: a 60-second aim trainer mini game. Click the targets as fast and accurately as you can. Built for the Cloud9 x JetBrains: Sky's The Limit Hackathon 2026 (Category 3: Event Mini Game).">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand">
+      <span class="brand-mark">C9</span>
+      <span class="brand-name">CLOUD9 <strong>FLICK SHOT</strong></span>
+    </div>
+    <div class="top-actions">
+      <button id="soundBtn" class="chip-btn" type="button" aria-label="Toggle sound">SOUND: ON</button>
+    </div>
+  </header>
+
+  <main id="arena-wrap">
+    <canvas id="game" aria-label="Game arena"></canvas>
+
+    <div id="hud" class="hidden">
+      <div class="hud-item"><span class="hud-label">SCORE</span><span id="hudScore" class="hud-value">0</span></div>
+      <div class="hud-item"><span class="hud-label">TIME</span><span id="hudTime" class="hud-value">60</span></div>
+      <div class="hud-item"><span class="hud-label">COMBO</span><span id="hudCombo" class="hud-value">x1</span></div>
+      <div class="hud-item"><span class="hud-label">HITS</span><span id="hudHits" class="hud-value">0</span></div>
+    </div>
+
+    <!-- MENU -->
+    <section id="menu" class="overlay">
+      <h1>CLOUD9<br><span>FLICK SHOT</span></h1>
+      <p class="tagline">60 seconds. One arena. How fast are your flicks?</p>
+      <p class="howto">Click the glowing targets as fast as you can. Chain hits to build your combo — a miss resets it. No tutorial, no waiting: one click and you play.</p>
+      <button id="startBtn" class="big-btn" type="button">▶ &nbsp;START — 60 SECONDS</button>
+      <div class="leaderboard">
+        <h2>LOCAL TOP 10 <span class="lb-note">— saved on this device, no Wi-Fi needed</span></h2>
+        <ol id="menuBoard"></ol>
+      </div>
+      <p class="foot">An original mini game for the Cloud9 x JetBrains: Sky's The Limit Hackathon 2026 · Category 3: Event Mini Game · All artwork drawn in code — no third-party assets.</p>
+    </section>
+
+    <!-- COUNTDOWN -->
+    <section id="countdown" class="overlay hidden">
+      <div id="countNum">3</div>
+      <p class="count-hint">Get ready…</p>
+    </section>
+
+    <!-- SCORE -->
+    <section id="scoreScreen" class="overlay hidden">
+      <h2>TIME'S UP!</h2>
+      <div class="final-score"><span id="finalScore">0</span><span class="final-label">POINTS</span></div>
+      <div class="stats">
+        <div class="stat"><span class="stat-value" id="statAcc">0%</span><span class="stat-label">ACCURACY</span></div>
+        <div class="stat"><span class="stat-value" id="statHits">0</span><span class="stat-label">HITS</span></div>
+        <div class="stat"><span class="stat-value" id="statMiss">0</span><span class="stat-label">MISSES</span></div>
+        <div class="stat"><span class="stat-value" id="statStreak">0</span><span class="stat-label">BEST STREAK</span></div>
+      </div>
+      <div class="save-row">
+        <label for="nameInput">YOUR TAG</label>
+        <input id="nameInput" type="text" maxlength="10" value="ACE" autocomplete="off" spellcheck="false">
+        <button id="saveBtn" class="mid-btn" type="button">SAVE SCORE</button>
+      </div>
+      <p id="saveMsg" class="save-msg hidden">Saved to the local leaderboard.</p>
+      <div class="leaderboard">
+        <h2>LOCAL TOP 10</h2>
+        <ol id="scoreBoard"></ol>
+      </div>
+      <button id="againBtn" class="big-btn" type="button">↻ &nbsp;PLAY AGAIN</button>
+      <button id="menuBtn" class="ghost-btn" type="button">Back to menu</button>
+    </section>
+  </main>
+
+  <footer id="bottombar">
+    <span>Mouse / touch only · 60-second sessions · Instant reset between players</span>
+  </footer>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
